@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - 8080:8080
+      - 7777:7777
     volumes:
       - .:/www/server:delegated
       - ${NETWORK_PROXY_ROOT_DIR:-.}/volumes/vscode-extensions:/www/.vscode-server:delegated
@@ -22,15 +22,9 @@ services:
     ports:
       - "8388:8388"
     environment:
-      - SERVER_ADDR=0.0.0.0
-      - SERVER_ADDR_IPV6=::0
-      - DNS_ADDRS=8.8.8.8,8.8.4.4
-      - TZ=UTC
-      - TIMEOUT=300
-      - METHOD=aes-256-gcm
+      # - METHOD=aes-256-gcm
+      - METHOD=aes-256-cfb
       - PASSWORD_SECRET=${PASSWORD_SECRET:-shadowsocks}
-    secrets:
-      - shadowsocks
 
 networks:
   default:
