@@ -1,0 +1,37 @@
+version: '3.5'
+
+services:
+  network-proxy:
+    container_name: network-proxy-dev
+    image: liyaodev/network-proxy-dev:v1.0.0
+    # 本地构建
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/www/server:delegated
+      - ${NETWORK_PROXY_ROOT_DIR:-.}/volumes/vscode-extensions:/www/.vscode-server:delegated
+    depends_on:
+      - shadowsocks
+  
+  shadowsocks:
+    container_name: network-proxy-shadowsocks
+    image: shadowsocks/shadowsocks-libev:latest
+    ports:
+      - "8388:8388"
+    environment:
+      - SERVER_ADDR=0.0.0.0
+      - SERVER_ADDR_IPV6=::0
+      - DNS_ADDRS=8.8.8.8,8.8.4.4
+      - TZ=UTC
+      - TIMEOUT=300
+      - METHOD=aes-256-gcm
+      - PASSWORD_SECRET=${PASSWORD_SECRET:-shadowsocks}
+    secrets:
+      - shadowsocks
+
+networks:
+  default:
+    name: network_proxy_dev

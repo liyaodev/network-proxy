@@ -1,0 +1,8 @@
+
+# Env
+volumes
+.vscode
+.metals
+test
+__pycache__
+.env
